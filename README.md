@@ -5,7 +5,7 @@
 Скачиваем [нужную версию JDK](https://www.oracle.com/java/technologies/downloads/#java8) и копируем на удалённый хост:
 
 ```bash
-scp jdk-8u311-linux-x64.tar.gz root@es1305-www-1.devops.rebrain.srwx.net:~
+scp jdk-8u311-linux-x64.tar.gz root@es1305-www-1.example.com:~
 ```
 
 На целевой ВМ:
@@ -87,13 +87,13 @@ Starting tale ...
 ### 5.1. HTTP
 
 ```bash
-nano /etc/nginx/sites-available/es1305-www-1.devops.rebrain.srwx.net
+nano /etc/nginx/sites-available/es1305-www-1.example.com
 ```
 
 ```bash
 server {
   listen 80;
-  server_name es1305-www-1.devops.rebrain.srwx.net;
+  server_name es1305-www-1.example.com;
   access_log off;
 
   location / {
@@ -112,7 +112,7 @@ server {
 
 ```bash
 rm /etc/nginx/sites-enabled/default
-ln -s /etc/nginx/sites-available/es1305-www-1.devops.rebrain.srwx.net /etc/nginx/sites-enabled/
+ln -s /etc/nginx/sites-available/es1305-www-1.example.com /etc/nginx/sites-enabled/
 nginx -t
 nginx -s reload
 ```
@@ -121,15 +121,15 @@ nginx -s reload
 
 ```bash
 apt install certbot python3-certbot-nginx
-certbot --nginx -d es1305-www-1.devops.rebrain.srwx.net
+certbot --nginx -d es1305-www-1.example.com
 
-nano /etc/nginx/sites-available/es1305-www-1.devops.rebrain.srwx.net
+nano /etc/nginx/sites-available/es1305-www-1.example.com
 ```
 
 ```bash
 server {
   listen 443 ssl http2;
-  server_name es1305-www-1.devops.rebrain.srwx.net;
+  server_name es1305-www-1.example.com;
   access_log off;
 
   location / {
@@ -143,16 +143,16 @@ server {
     proxy_set_header   X-Real-IP         $remote_addr;
   }
 
-    ssl_certificate /etc/letsencrypt/live/es1305-www-1.devops.rebrain.srwx.net/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/es1305-www-1.devops.rebrain.srwx.net/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/es1305-www-1.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/es1305-www-1.example.com/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }
 
 server {
   listen 80;
-  server_name es1305-www-1.devops.rebrain.srwx.net;
-    if ($host = es1305-www-1.devops.rebrain.srwx.net) {
+  server_name es1305-www-1.example.com;
+    if ($host = es1305-www-1.example.com) {
         return 301 https://$host$request_uri;
     }
 }
